@@ -1,0 +1,53 @@
+file:///Users/giulia/Desktop/TESI/rstoolbox_unsuperclass.html
+
+setwd("/Users/giulia/fires")
+library(RStoolbox)
+library(ggplot2)
+fire20 <- brick("20fire.nc")
+
+# sto .nc è un problema -> funzione specifica: 
+
+doc <- brick("Data") # nuovo file da nasa
+
+## Unsupervised clustering with kmeans ##
+set.seed(42)
+MapTheme <- list(theme(
+  axis.text = element_text(size = 6),  
+  axis.text.y = element_text(angle = 90, hjust = 0.5),
+  axis.title = element_blank()
+))  
+lsat_fire <- unsuperClass(doc, nClasses = 4, output = "classes")
+lsat_fire
+ggR(lsat_fire$map, forceCat = TRUE, geom_raster = TRUE) +
+  scale_fill_viridis_d(name = "Cluster", option = "A") + MapTheme
+  
+  # ok però serve fare crop 
+  # non mi ricordo 
+ # ext <- c(18,20, 35,50)
+ # snowitaly <- crop(snow,ext)
+ 
+ ## distances ##
+ set.seed(42)
+lsat_fired <- unsuperClass(doc, nClasses = 4, output = "distances")
+lsat_fired
+ggR(lsat_fird$map, layer = 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
+  # per qualche motivo non funzione -> Error in .local(x, ...) : not a valid subset
+  
+  
+  ## spectral angle mapper ##
+  classCentroids <- lsat_fired$model$centers
+lsat_sa <- sam(doc, em = classCentroids, angles = TRUE)
+lsat_sa
+ggR(lsat_sa, 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Spectral angle", direction = -1) + MapTheme
+  # questo tecnicamente ha funzionato ma non ho ben capito a cosa serve + la mappa ha poco senso (mappa non top comunque)
+  
+  ## Spectral unmixing ##
+  lsat_umx <- mesma(doc, em = classCentroids)
+lsat_umx
+
+ggR(lsat_umx, 1:4, geom_raster = TRUE) +
+   scale_fill_viridis_c(name = "Probability") + MapTheme
+   
+   # idem come sopra 
