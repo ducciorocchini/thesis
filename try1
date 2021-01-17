@@ -5,7 +5,7 @@ library(RStoolbox)
 library(ggplot2)
 fire20 <- brick("20fire.nc")
 
-# sto .nc è un problema -> funzione specifica: 
+# sto .nc è un problema -> funzione specifica: usa library(ncdf4)
 
 doc <- brick("Data") # nuovo file da nasa
 
