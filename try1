@@ -3,11 +3,8 @@ file:///Users/giulia/Desktop/TESI/rstoolbox_unsuperclass.html
 setwd("/Users/giulia/fires")
 library(RStoolbox)
 library(ggplot2)
-fire20 <- brick("20fire.nc")
 
-# sto .nc è un problema -> funzione specifica: usa library(ncdf4)
-
-doc <- brick("Data") # nuovo file da nasa
+doc <- brick("Data") #  file da nasa
 
 ## Unsupervised clustering with kmeans ##
 set.seed(42)
@@ -51,3 +48,12 @@ ggR(lsat_umx, 1:4, geom_raster = TRUE) +
    scale_fill_viridis_c(name = "Probability") + MapTheme
    
    # idem come sopra 
+
+## con file .nc e provo crop 
+library(ncdf4)
+fire20 <- brick("20fire.nc")
+ext <- c(69,50,15,0)
+fire20c <- crop(fire20, ext)
+# mi dà errore: Error in .local(x, y, ...) : Cannot get an Extent object from argument y
+# ???
+# però .nc con library funziona 
