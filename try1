@@ -2,10 +2,13 @@
 setwd("/Users/giulia/fires")
 library(RStoolbox)
 library(ggplot2)
+install.packages("remotes")
+remotes::install_github("bleutner/RStoolbox")
 
 doc <- brick("Data") #  file da nasa
+ggRGB(data, stretch = "lin") + MapTheme ## Error in img[[rgb]] : object of type 'closure' is not subsettable
 
-## Unsupervised clustering with kmeans ##
+## default behavior ##
 set.seed(42)
 MapTheme <- list(theme(
   axis.text = element_text(size = 6),  
@@ -16,14 +19,15 @@ lsat_fire <- unsuperClass(doc, nClasses = 4, output = "classes")
 lsat_fire
 ggR(lsat_fire$map, forceCat = TRUE, geom_raster = TRUE) +
   scale_fill_viridis_d(name = "Cluster", option = "A") + MapTheme
-  
- # ok però serve fare crop 
+ 
+ ## Warning message: Removed 112682 rows containing missing values (geom_raster).
+# però funziona, ma essendo mappa completa mette anche il mare in una classe, crea confusione servirebbe crop prima 
  
  ## distances ##
  set.seed(42)
 lsat_fired <- unsuperClass(doc, nClasses = 4, output = "distances")
 lsat_fired
-ggR(lsat_fird$map, layer = 1:4, geom_raster = TRUE) +
+ggR(lsat_fired$map, layer = 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
 
 # per qualche motivo non funzione -> Error in .local(x, ...) : not a valid subset
@@ -35,7 +39,7 @@ lsat_sa <- sam(doc, em = classCentroids, angles = TRUE)
 lsat_sa
 ggR(lsat_sa, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Spectral angle", direction = -1) + MapTheme
-  # questo tecnicamente ha funzionato la mappa ha poco senso (crop?)
+  # questo tecnicamente ha funzionato la mappa ha poco senso (stesso problema di sopra, serve crop prima di fare tutto. classi che non servono)
   
   ## Spectral unmixing ##
   lsat_umx <- mesma(doc, em = classCentroids)
@@ -54,3 +58,18 @@ fire20c <- crop(fire20, ext)
 # mi dà errore: Error in .local(x, y, ...) : Cannot get an Extent object from argument y
 
 # però .nc con library funziona 
+
+## tentativo con file .nc
+library(ncdf4)
+fire20 <- brick("20fire.nc")
+set.seed(42)
+MapTheme <- list(theme(
+  axis.text = element_text(size = 6),  
+  axis.text.y = element_text(angle = 90, hjust = 0.5),
+  axis.title = element_blank()
+))  
+
+ggRGB(fire20, stretch = "lin") + MapTheme
+# Error in .local(x, ...) : not a valid subset
+
+
