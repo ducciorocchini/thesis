@@ -1,4 +1,3 @@
-file:///Users/giulia/Desktop/TESI/rstoolbox_unsuperclass.html
 
 setwd("/Users/giulia/fires")
 library(RStoolbox)
@@ -18,10 +17,7 @@ lsat_fire
 ggR(lsat_fire$map, forceCat = TRUE, geom_raster = TRUE) +
   scale_fill_viridis_d(name = "Cluster", option = "A") + MapTheme
   
-  # ok però serve fare crop 
-  # non mi ricordo 
- # ext <- c(18,20, 35,50)
- # snowitaly <- crop(snow,ext)
+ # ok però serve fare crop 
  
  ## distances ##
  set.seed(42)
@@ -29,7 +25,8 @@ lsat_fired <- unsuperClass(doc, nClasses = 4, output = "distances")
 lsat_fired
 ggR(lsat_fird$map, layer = 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
-  # per qualche motivo non funzione -> Error in .local(x, ...) : not a valid subset
+
+# per qualche motivo non funzione -> Error in .local(x, ...) : not a valid subset
   
   
   ## spectral angle mapper ##
@@ -38,7 +35,7 @@ lsat_sa <- sam(doc, em = classCentroids, angles = TRUE)
 lsat_sa
 ggR(lsat_sa, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Spectral angle", direction = -1) + MapTheme
-  # questo tecnicamente ha funzionato ma non ho ben capito a cosa serve + la mappa ha poco senso (mappa non top comunque)
+  # questo tecnicamente ha funzionato la mappa ha poco senso (crop?)
   
   ## Spectral unmixing ##
   lsat_umx <- mesma(doc, em = classCentroids)
@@ -55,5 +52,5 @@ fire20 <- brick("20fire.nc")
 ext <- c(69,50,15,0)
 fire20c <- crop(fire20, ext)
 # mi dà errore: Error in .local(x, y, ...) : Cannot get an Extent object from argument y
-# ???
+
 # però .nc con library funziona 
