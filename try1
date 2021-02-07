@@ -72,4 +72,5 @@ MapTheme <- list(theme(
 ggRGB(fire20, stretch = "lin") + MapTheme
 # Error in .local(x, ...) : not a valid subset
 
-
+#### prove con immagini di sentinel (scaricate con nuovo metodo) ####
+# il sito dà tutti i risultati offline e non posso scaricare niente 
