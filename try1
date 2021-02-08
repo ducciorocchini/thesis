@@ -74,3 +74,18 @@ ggRGB(fire20, stretch = "lin") + MapTheme
 
 #### prove con immagini di sentinel (scaricate con nuovo metodo) ####
 # il sito dà tutti i risultati offline e non posso scaricare niente 
+
+## riprovo di nuovo, per brasile e lago d'aral mi dà messaggio di errore quindi ho scaricato a caso zona di Bolzano che ha funzionato
+## tentativo!
+
+setwd("/Users/giulia/thesis/bolzano")
+
+library(raster)
+
+#provo a fare uno stack delle immagini che mi servono 
+rlist <- list.files(pattern="T32TQS")
+import <- lapply(rlist, raster) # Error in .rasterObjectFromFile(x, band = band, objecttype = "RasterLayer",:Cannot create a RasterLayer object from this file.
+
+# provo a metterle separate???? mi dà lo stesso errore
+a <- raster("T32TQS_20200627T101031_B02_10m.jp2")
+a <- brick("T32TQS_20200627T101031_B02_10m.jp2")
