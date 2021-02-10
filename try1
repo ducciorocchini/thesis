@@ -89,3 +89,55 @@ import <- lapply(rlist, raster) # Error in .rasterObjectFromFile(x, band = band,
 # provo a metterle separate???? mi dà lo stesso errore
 a <- raster("T32TQS_20200627T101031_B02_10m.jp2")
 a <- brick("T32TQS_20200627T101031_B02_10m.jp2")
+
+
+## immagini jp2 non riesco a usarle, problema di gdal probabilmente
+
+## nuovo sito, francese
+# scarico immagini brasile, diverse risoluzioni delle bande, evo trasformare 20 in 10 
+require(raster)
+a <- raster("/Users/giulia/thesis/SENTINEL2A_20190828-141319-476_L2A_T21MVT_C_V2-2_FRE_B8.tif")
+plot(a)
+b <-  raster("/Users/giulia/thesis/SENTINEL2A_20190828-141319-476_L2A_T21MVT_C_V2-2_FRE_B5.tif")
+b
+d <- resample(b,a) # per trasformare b in formato 10x10 
+e <- stack(a,d) # poi vanno messe insieme tutte le bande con stack, dopo aver convertito tutte le 20 in 10. e poi per il 
+library(RStoolbox)
+library(ggplot2)
+MapTheme <- list(theme(
+  +     axis.text = element_text(size = 6),  
+  +     axis.text.y = element_text(angle = 90, hjust = 0.5),
+  +     axis.title = element_blank()
+  + ))  
+ggRGB(e, stretch = "lin") + MapTheme ## questo non funziona: error in .local(x,...): not a valid subset
+
+## 1st
+set.seed(42)
+lsat_uc <- unsuperClass(e, nClasses = 4, output = "classes")
+lsat_uc
+ggR(lsat_uc$map, forceCat = TRUE, geom_raster = TRUE) +
+  +     scale_fill_viridis_d(name = "Cluster", option = "A") + MapTheme
+## funziona!
+
+## 2nd
+set.seed(42)
+lsat_ucd <- unsuperClass(e, nClasses = 4, output = "distances")
+lsat_ucd
+ggR(lsat_ucd$map, layer = 1:4, geom_raster = TRUE) +
+  +     scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
+## Error in .local(x, ...) : not a valid subset
+## non funziona
+
+## 3rd
+classCentroids <- lsat_ucd$model$centers
+lsat_sa <- sam(e, em = classCentroids, angles = TRUE)
+lsat_sa
+ggR(lsat_sa, 1:4, geom_raster = TRUE) +
+  +     scale_fill_viridis_c(name = "Spectral angle", direction = -1) + MapTheme
+## funziona!
+
+## 4th 
+lsat_umx <- mesma(e, em = classCentroids)
+lsat_umx
+ggR(lsat_umx, 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Probability") + MapTheme
