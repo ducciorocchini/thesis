@@ -126,7 +126,7 @@ lsat_ucd
 ggR(lsat_ucd$map, layer = 1:4, geom_raster = TRUE) +
   +     scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
 ## Error in .local(x, ...) : not a valid subset
-## non funziona
+## non funziona -> 
 
 ## 3rd
 classCentroids <- lsat_ucd$model$centers
@@ -141,3 +141,6 @@ lsat_umx <- mesma(e, em = classCentroids)
 lsat_umx
 ggR(lsat_umx, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Probability") + MapTheme
+
+
+## IL PROBLEMA è CHE NON MI INSTALLA IL PACCHETTO!!!! problema mac
