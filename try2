@@ -60,4 +60,4 @@ lsat_umx <- mesma(try, em = classCentroids)
 lsat_umx
 ggR(lsat_umx, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Probability") + MapTheme
-  
+## molto lento ma alla fine ha funzionato
