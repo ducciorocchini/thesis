@@ -1,0 +1,63 @@
+## CON WINDOWS
+
+## code - tentauvo con immagine groenlandia 
+install.packages("remotes")
+
+remotes::install_github("bleutner/RStoolbox")
+install.packages("ggplot2")
+install.packages("RStoolbox")
+install.packages("raster")
+install.packages("RGdal")
+# libray di tutto
+
+a <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B02_10m.jp2")
+b <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B03_10m.jp2")
+c <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B04_10m.jp2")
+d <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B05_20m.jp2")
+resample(d,c) 
+e <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B06_20m.jp2")
+resample(e,a)
+f <-  <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B07_20m.jp2")
+resample(f,a)
+g  <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B08_10m.jp2")
+
+## il resample ci mette ore, trovare metodo diverso?? per ora non metto quelle da 20m 
+try <- stack(a,b,c,g)
+try
+
+MapTheme <- list(theme(
+  axis.text = element_text(size = 6),  
+  axis.text.y = element_text(angle = 90, hjust = 0.5),
+  axis.title = element_blank()
+))  
+ggRGB(try, stretch = "lin")
+set.seed(42)
+
+## default behavior
+lsat_uc <- unsuperClass(try, nClasses = 4, output = "classes")
+lsat_uc
+ggR(lsat_uc$map, forceCat = TRUE, geom_raster = TRUE) +
+  scale_fill_viridis_d(name = "Cluster", option = "A") + MapTheme
+
+## Distances
+set.seed(42)
+lsat_ucd <- unsuperClass(try, nClasses = 4, output = "distances")
+
+lsat_ucd
+ggR(lsat_ucd$map, layer = 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
+
+## Spectral angle mapper
+classCentroids <- lsat_ucd$model$centers
+
+lsat_sa <- sam(try, em = classCentroids, angles = TRUE)
+lsat_sa
+ggR(lsat_sa, 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Spectral angle", direction = -1) + MapTheme
+
+## Spectral unmixing
+lsat_umx <- mesma(try, em = classCentroids)
+lsat_umx
+ggR(lsat_umx, 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Probability") + MapTheme
+  
