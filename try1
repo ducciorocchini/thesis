@@ -144,3 +144,37 @@ ggR(lsat_umx, 1:4, geom_raster = TRUE) +
 
 
 ## IL PROBLEMA è CHE NON MI INSTALLA IL PACCHETTO!!!! problema mac
+
+
+## con nuovo pc 
+## rifatto stesse cose ora funziona perchè ho scaricato remotes::install_github("bleutner/RStoolbox")
+
+# ora provo a fare lo stack di tutte le bande, uso immagine di groenlandia
+library(raster)
+a <- raster("C:/Users/utente/Documents/")
+# per quelli in 20 devo fare resample 
+resample(b,a) # per portare b (che è in 20) in 10 (come a) 
+# poi stack 
+stack(a,b,c,d)
+
+a <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B02_10m.jp2")
+b <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B03_10m.jp2")
+c <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B04_10m.jp2")
+d <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B05_20m.jp2")
+resample(d,a)
+e <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B06_20m.jp2")
+resample(e,a)
+f <-  <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B07_20m.jp2")
+resample(f,a)
+g  <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B08_10m.jp2")
+
+stack(a,b,c,d,e,f,g)
+
+
+
+
+
+
+
+
+
