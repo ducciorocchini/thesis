@@ -61,3 +61,16 @@ lsat_umx
 ggR(lsat_umx, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Probability") + MapTheme
 ## molto lento ma alla fine ha funzionato
+
+
+## p224r63_2011res <- aggregate(p224r63_2011, fact=10)???
+## > ext <- c(4800,5100,4150000,4200000)
+> zoom(etn,ext=ext)
+> etncrop1 <- crop(etn,ext)
+Error in .local(x, y, ...) : extents do not overlap
+> ext <- c(480000,510000,4150000,4200000)
+> zoom(etn,ext=ext)
+> ext2 <- c(470000,510000,4140000,4200000) #giusto
+> zoom(etn,ext=ext2)
+> etn1 <- crop(etn,ext2)
+writeRaster(etn2,"etn2.tif")
