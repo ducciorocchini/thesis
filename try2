@@ -1,6 +1,6 @@
 ## CON WINDOWS
 
-## code - tentauvo con immagine groenlandia 
+## code - tentauvo con immagine groenlandia (poi non usata) 
 install.packages("remotes")
 
 remotes::install_github("bleutner/RStoolbox")
@@ -82,4 +82,72 @@ zoom(etnaRGB20,ext=ext2)
 etnRGB20 <- crop(etnaRGB20,ext2)
 writeRaster(etnRGB20,"etnRGB20.tif")
 plotRGB(etnRGB20, stretch="Lin")
+
+
+
+## california fires
+## post incendio: 26/10/2020
+k2 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B02_20m.jp2")
+k3 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B03_20m.jp2")
+k4 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B04_20m.jp2")
+k5 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B05_20m.jp2")
+k6 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B06_20m.jp2")
+k7 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B07_20m.jp2")
+k8 <- raster("C:/Users/utente/Documents/T10SFH_20201026T185459_B8A_20m.jp2")
+calfire10 <- stack(k2,k3,k4,k5,k6,k7,k8)
+calfire10
+MapTheme <- list(theme(
+  axis.text = element_text(size = 6),  
+  axis.text.y = element_text(angle = 90, hjust = 0.5),
+  axis.title = element_blank()
+))  
+ggRGB(calfire10, stretch = "lin")
+
+## serve fare un crop 
+ext <- c(640000,690000,4225000,4275000)
+zoom(calfire10, ext=ext)
+ext2 <- c(655000,675000,4240000,4260000)
+zoom(calfire10,ext=ext2)
+califire10 <- crop(calfire10,ext2)
+ext3 <- c(660000,674000,4247000,4257000)
+zoom(califire10,ext=ext3)
+califir10 <- crop(califire10, ext3)
+writeRaster(califir10,"califir10.tif")
+
+MapTheme <- list(theme(
+  axis.text = element_text(size = 6),  
+  axis.text.y = element_text(angle = 90, hjust = 0.5),
+  axis.title = element_blank()
+))  
+ggRGB(califir10, stretch = "lin")
+set.seed(42)
+
+## default behavior
+lsat_uc <- unsuperClass(califir10, nClasses = 4, output = "classes")
+lsat_uc
+ggR(lsat_uc$map, forceCat = TRUE, geom_raster = TRUE) +
+  scale_fill_viridis_d(name = "Cluster", option = "A") + MapTheme
+
+## Distances
+set.seed(42)
+lsat_ucd <- unsuperClass(califir10, nClasses = 4, output = "distances")
+
+lsat_ucd
+ggR(lsat_ucd$map, layer = 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Distance", direction = -1) + MapTheme
+
+## Spectral angle mapper
+classCentroids <- lsat_ucd$model$centers
+
+lsat_sa <- sam(califir10, em = classCentroids, angles = TRUE)
+lsat_sa
+ggR(lsat_sa, 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Spectral angle", direction = -1) + MapTheme
+
+## Spectral unmixing
+lsat_umx <- mesma(califir10, em = classCentroids)
+lsat_umx
+ggR(lsat_umx, 1:4, geom_raster = TRUE) +
+  scale_fill_viridis_c(name = "Probability") + MapTheme
+
 
