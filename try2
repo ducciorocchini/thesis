@@ -25,6 +25,8 @@ g  <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B08_10m.jp2")
 try <- stack(a,b,c,g)
 try
 
+## uso tutte 20m (import con raster e poi stack)
+
 MapTheme <- list(theme(
   axis.text = element_text(size = 6),  
   axis.text.y = element_text(angle = 90, hjust = 0.5),
@@ -62,15 +64,22 @@ ggR(lsat_umx, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Probability") + MapTheme
 ## molto lento ma alla fine ha funzionato
 
-
-## p224r63_2011res <- aggregate(p224r63_2011, fact=10)???
-## > ext <- c(4800,5100,4150000,4200000)
-> zoom(etn,ext=ext)
-> etncrop1 <- crop(etn,ext)
-Error in .local(x, y, ...) : extents do not overlap
-> ext <- c(480000,510000,4150000,4200000)
-> zoom(etn,ext=ext)
-> ext2 <- c(470000,510000,4140000,4200000) #giusto
-> zoom(etn,ext=ext2)
-> etn1 <- crop(etn,ext2)
+## per crop (etna)
+ext2 <- c(470000,510000,4140000,4200000) #giusto
+zoom(etn,ext=ext2)
+etn1 <- crop(etn,ext2)
 writeRaster(etn2,"etn2.tif")
+
+## plotRGB
+require(raster)
+require(RStoolbox)
+etna20v <- raster("C:/Users/utente/Documents/T33SVB_20200222T095021_B03_10m.jp2")
+etna20r <- raster("C:/Users/utente/Documents/T33SVB_20200222T095021_B04_10m.jp2")
+etna20ir <- raster("C:/Users/utente/Documents/T33SVB_20200222T095021_B08_10m.jp2")
+etnaRGB20 <- stack(etna20v,etna20r,etna20ir)
+ext2 <- c(470000,510000,4140000,4200000)
+zoom(etnaRGB20,ext=ext2)
+etnRGB20 <- crop(etnaRGB20,ext2)
+writeRaster(etnRGB20,"etnRGB20.tif")
+plotRGB(etnRGB20, stretch="Lin")
+
