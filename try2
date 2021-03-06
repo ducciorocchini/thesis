@@ -150,4 +150,5 @@ lsat_umx
 ggR(lsat_umx, 1:4, geom_raster = TRUE) +
   scale_fill_viridis_c(name = "Probability") + MapTheme
 
-
+## califire 03/2020
+## uguale
