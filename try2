@@ -7,7 +7,7 @@ remotes::install_github("bleutner/RStoolbox")
 install.packages("ggplot2")
 install.packages("RStoolbox")
 install.packages("raster")
-install.packages("RGdal")
+install.packages("rgdal")
 # libray di tutto
 
 a <- raster("C:/Users/utente/Documents/T22WEU_20210217T151209_B02_10m.jp2")
@@ -81,7 +81,7 @@ ext2 <- c(470000,510000,4140000,4200000)
 zoom(etnaRGB20,ext=ext2)
 etnRGB20 <- crop(etnaRGB20,ext2)
 writeRaster(etnRGB20,"etnRGB20.tif")
-plotRGB(etnRGB20, stretch="Lin")
+plotRGB(etnRGB20, 3,2,1, stretch="Lin")
 
 
 
